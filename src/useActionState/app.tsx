@@ -14,8 +14,7 @@ import {
   Stack,
   TextField,
 } from "@mui/material";
-import { err, ok, Result, ResultAsync } from "neverthrow";
-import { error } from "console";
+import { ResultAsync } from "neverthrow";
 
 const sleep = (msec: number) =>
   new Promise((resolve) => setTimeout(resolve, msec));
@@ -55,7 +54,6 @@ const App1 = ({ trueOrFalse }: AppProps) => {
       } else {
         setError("unknown error");
       }
-      return;
     } finally {
       setIsLoading(false);
     }
@@ -81,78 +79,29 @@ const App1 = ({ trueOrFalse }: AppProps) => {
   );
 };
 
-// const App2 = ({ trueOrFalse }: AppProps) => {
-//   const [appId, setAppId] = useState("2");
-//   const [data, setData] = useState<string>("");
-//   const [error, setError] = useState<string>("");
-
-//   const [isLoading, startTransition] = useTransition();
-
-//   const onClick = async () => {
-//     startTransition(async () => {
-//       const res = await fetchFields(trueOrFalse);
-//       setData(res);
-//       // try {
-//       //   const res = await fetchFields(trueOrFalse);
-//       //   setData(res);
-//       // } catch (error) {
-//       //   console.log({ error });
-//       //   if (error instanceof Error) {
-//       //     setError(error.message);
-//       //   } else {
-//       //     setError("unknown error");
-//       //   }
-//       //   return;
-//       // }
-//     });
-//   };
-
-//   return (
-//     <Stack spacing={2} sx={{ p: 4 }}>
-//       <Stack direction="row" spacing={2}>
-//         <TextField
-//           value={appId}
-//           onChange={(e) => setAppId(e.target.value)}
-//           label="appId"
-//           size="small"
-//         />
-//         <Suspense fallback={<h1>🌀 Loading...</h1>}>
-//           <Button onClick={onClick} variant="contained" disabled={isLoading}>
-//             Get
-//           </Button>
-//         </Suspense>
-//       </Stack>
-//       {isLoading && <CircularProgress size={24} />}
-//       {data !== "" && <Alert severity="success">{data}</Alert>}
-//       {error !== "" && <Alert severity="error">{error}</Alert>}
-//     </Stack>
-//   );
-// };
-
-const onClick2 = async (trueOrFalse: boolean) => {
-  try {
-    const res = await fetchFields(trueOrFalse);
-    return { data: res, error: "" };
-  } catch (error) {
-    console.log({ error });
-    let errorMessage = "";
-    if (error instanceof Error) {
-      errorMessage = error.message;
-    } else {
-      errorMessage = "unknown error";
-    }
-    return { data: "", error: errorMessage };
-  }
-};
-
 const App2 = ({ trueOrFalse }: AppProps) => {
   const [appId, setAppId] = useState("2");
+
+  const onClick2 = async (trueOrFalse: boolean) => {
+    try {
+      const res = await fetchFields(trueOrFalse);
+      return { data: res, error: "" };
+    } catch (error) {
+      console.log({ error });
+      let errorMessage = "";
+      if (error instanceof Error) {
+        errorMessage = error.message;
+      } else {
+        errorMessage = "unknown error";
+      }
+      return { data: "", error: errorMessage };
+    }
+  };
 
   const [state, formAction, isLoading] = useActionState(
     () => onClick2(trueOrFalse),
     { data: "", error: "" }
   );
-  console.log({ state });
 
   return (
     <Stack spacing={2} sx={{ p: 4 }}>
@@ -182,25 +131,24 @@ const App2 = ({ trueOrFalse }: AppProps) => {
   );
 };
 
-const onClick3 = async (trueOrFalse: boolean) => {
-  return ResultAsync.fromPromise(fetchFields(trueOrFalse), (error) => {
-    console.error(error);
-    if (error instanceof Error) {
-      return error.message;
-    }
-
-    return "unknown error";
-  });
-};
-
 const App3 = ({ trueOrFalse }: AppProps) => {
   const [appId, setAppId] = useState("3");
+
+  const onClick3 = async (trueOrFalse: boolean) => {
+    return ResultAsync.fromPromise(fetchFields(trueOrFalse), (error) => {
+      console.error(error);
+      if (error instanceof Error) {
+        return error.message;
+      }
+
+      return "unknown error";
+    });
+  };
 
   const [state, formAction, isLoading] = useActionState(
     () => onClick3(trueOrFalse),
     null
   );
-  console.log({ state });
 
   return (
     <Stack spacing={2} sx={{ p: 4 }}>

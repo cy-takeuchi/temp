@@ -3,7 +3,7 @@ import react from "@vitejs/plugin-react";
 import { resolve } from "node:path";
 
 export default {
-  root: "./src/useTransition",
+  root: "./src/useActionState",
   build: {
     outDir: "./dist",
     rollupOptions: {

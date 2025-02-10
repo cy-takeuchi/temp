@@ -2,7 +2,7 @@
   "type": "module",
   "scripts": {
     "use": "vite --config ./src/use/vite.config.ts",
-    "useTransition": "vite --config ./src/useTransition/vite.config.ts"
+    "useActionState": "vite --config ./src/useActionState/vite.config.ts"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
